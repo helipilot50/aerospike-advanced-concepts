@@ -5,6 +5,7 @@ This repositoy contains courseware and exercises that cover advanced concepts no
 - [Counters in Aerospike](counters/README.md) - How to create and use atomic counters in aerospike.
 - [Lists in Aerospike](lists/README.md) - How to use list operations in Aerospike.
 - [Sorted Maps in Aerospike](maps/README.md) - How to use map operations in Aerospike.
+- [Geo operations in Aerospike](geo/README.md) - How to use Geo operations in Aerospike.
 - [Aerospike Spark integration](spark/READ.md) - How to use Aerospike with Apache Spark.
  
 ## Server Setup
