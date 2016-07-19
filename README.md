@@ -2,10 +2,10 @@
 [Aerospike](www.aerospike.com) is a high velocity and highly scalable NoSQL database of the key-value genre. The simple key value operations arequite straigh forward and several examples are available for each programming language [here](http://www.aerospike.com/docs/client). The is also a comprehensive [developer training course](http://www.aerospike.com/training/development/aerospike-for-developers.html) profided by Aerospike.
 
 This repositoy contains courseware and exercises that cover advanced concepts no tovered directly in the Aerospike training curriculum. These are:
-- Counters in Aerospike - How to create and use atomic counters in aerospike.
-- Lists in Aerospike - How to use list operations in Aerospike.
-- Sorted Maps in Aerospike - How to use map operations in Aerospike.
-- Aerospike Spark integration - How to use Aerospike with Apache Spark.
+- [Counters in Aerospike](counters/README.md) - How to create and use atomic counters in aerospike.
+- [Lists in Aerospike](lists/README.md) - How to use list operations in Aerospike.
+- [Sorted Maps in Aerospike](maps/README.md) - How to use map operations in Aerospike.
+- [Aerospike Spark integration](spark/READ.md) - How to use Aerospike with Apache Spark.
  
 ## Server Setup
 Before comencing theses workshops, you will need to have a running Aerospike cluster, a single node cluster is fine. 
