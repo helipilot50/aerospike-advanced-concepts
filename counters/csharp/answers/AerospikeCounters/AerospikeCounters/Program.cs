@@ -14,8 +14,7 @@ namespace AerospikeCounters
 			const string ns = "test"; // Aerospike namespace
 			const string set = "counters"; // Aerospike set name
 			const string CatCountBin = "cat-counter"; // Aerospike Bin name for a "cat" counter
-			const string DogCountBin = "dog-counter"; // Aerospike Bin name for a "cat" counter
-
+			const string DogCountBin = "dog-counter"; // Aerospike Bin name for a "dog" counter
 
 			// Connecting to Aerospike cluster
 			// Specify IP of one of the hosts in the cluster
@@ -49,6 +48,9 @@ namespace AerospikeCounters
 				record = client.Operate(null, key, Operation.Add(cat), Operation.Get());
 
 				PrintRecord(key, record);
+
+				// close Aerospike at the end of your program
+				client.Close();
 			}
 		}
 		public static void PrintRecord(Key key, Record record)
