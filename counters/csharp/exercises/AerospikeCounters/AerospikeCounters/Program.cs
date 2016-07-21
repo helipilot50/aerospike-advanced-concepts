@@ -29,23 +29,23 @@ namespace AerospikeCounters
 				// Add integer to the cat counter, and read the record.
 				Key key = new Key(ns, set, "a-record-with-one-counter");
 
-				Bin cat = new Bin(CatCountBin, 1); // Increment by 1
-				Record record = client.Operate(null, key, Operation.Add(cat), Operation.Get());
+				// TODO Increment cat counter by 1
+				Record record = null;
 
 				PrintRecord(key, record);
 
 				// Add integer to the cat counter and dog counter, and read the record.
 				key = new Key(ns, set, "a-record-with-two-counters");
 
-				cat = new Bin(CatCountBin, 3); // Increment by 3
-				Bin dog = new Bin(DogCountBin, 2); // Increment by 2
-				record = client.Operate(null, key, Operation.Add(cat), Operation.Add(dog), Operation.Get());
+				// TODO Increment cat counter by 3
+				// TODO Increment dog counter by 2
+				record = null;
 
 				PrintRecord(key, record);
 
 				// Subtract integer from the cat counter , and read the record.
-				cat = new Bin(CatCountBin, -1); // Increment by 3
-				record = client.Operate(null, key, Operation.Add(cat), Operation.Get());
+				// TODO Decrement cat counter by 1
+				record = null;
 
 				PrintRecord(key, record);
 
