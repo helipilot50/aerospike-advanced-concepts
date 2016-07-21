@@ -61,23 +61,23 @@ public class Program {
 				// Add integer to the cat counter, and read the record.
 				Key key = new Key(ns, set, "a-record-with-one-counter");
 
-				Bin cat = new Bin(catCountBin, 1); // Increment by 1
-				Record record = client.operate(null, key, Operation.add(cat), Operation.get());
+				// TODO Increment cat counter by 1
+				Record record = null;
 
 				printRecord(key, record);
 
 				// Add integer to the cat counter and dog counter, and read the record.
 				key = new Key(ns, set, "a-record-with-two-counters");
 
-				cat = new Bin(catCountBin, 3); // Increment by 3
-				Bin dog = new Bin(dogCountBin, 2); // Increment by 2
-				record = client.operate(null, key, Operation.add(cat), Operation.add(dog), Operation.get());
+				// TODO Increment cat counter by 3
+				// TODO Increment dog counter by 2
+				record = null;
 
 				printRecord(key, record);
 
 				// Subtract integer from the cat counter , and read the record.
-				cat = new Bin(catCountBin, -1); // Decrement by 1
-				record = client.operate(null, key, Operation.add(cat), Operation.get());
+				// TODO Decrement cat counter by 1
+				record = null;
 
 				printRecord(key, record);
 			}
