@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AerospikeCounters", "AerospikeCounters\AerospikeCounters.csproj", "{3C75EA96-3211-4909-91C2-9FA04C36C7CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AerospikeCountersAnswers", "AerospikeCounters\AerospikeCountersAnswers.csproj", "{3C75EA96-3211-4909-91C2-9FA04C36C7CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

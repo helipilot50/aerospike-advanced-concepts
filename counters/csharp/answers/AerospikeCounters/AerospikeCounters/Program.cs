@@ -44,7 +44,7 @@ namespace AerospikeCounters
 				PrintRecord(key, record);
 
 				// Subtract integer from the cat counter , and read the record.
-				cat = new Bin(CatCountBin, -1); // Increment by 3
+				cat = new Bin(CatCountBin, -1); // Decrement by 1
 				record = client.Operate(null, key, Operation.Add(cat), Operation.Get());
 
 				PrintRecord(key, record);
