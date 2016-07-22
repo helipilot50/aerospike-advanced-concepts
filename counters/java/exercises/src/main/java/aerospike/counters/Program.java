@@ -51,7 +51,7 @@ public class Program {
 		// Connecting to Aerospike cluster
 		// Specify IP of one of the hosts in the cluster
 		String SeedHost = "127.0.0.1";
-		// Specity Port that the node is listening on
+		// Specify Port that the node is listening on
 		int SeedPort = 3000;
 		// Establish connection
 		AerospikeClient client = new AerospikeClient(SeedHost, SeedPort);
