@@ -71,7 +71,7 @@ public class Program {
 		int SeedPort = 3000;
 		// Establish connection
 		client = new AerospikeClient(SeedHost, SeedPort);
-		
+
 		WritePolicy writePolicy = new WritePolicy(); // Create a WritePolicy
 		writePolicy.sendKey = true; // Save the Key on each write
 		writePolicy.expiration = 300; // expire the records in 5 minutes
@@ -84,14 +84,15 @@ public class Program {
 				
 				Key key = new Key(ns, set, "a-record-with-a-list");
 
-				Bin list = new Bin(listBin, aListOfLongs); 
-				client.put(writePolicy, key, list);
+				// TODO save a List to Aerospike
+				
 				Record record = client.get(null, key, listBin);
 				
 				printRecord(key, record);
 
 				// Add 1 element to the list and print the result
-				client.operate(writePolicy, key, ListOperation.append(listBin, Value.get(99L)));
+				
+				// TODO append 99 to the list
 				
 				record = client.get(null, key, listBin);
 				printRecord(key, record);
@@ -101,16 +102,14 @@ public class Program {
 				inputList.add(Value.get(55));
 				inputList.add(Value.get(77));
 				
-				client.operate(writePolicy, key, 
-						ListOperation.appendItems(listBin, inputList));
+				// TODO append inputList to the list already saved
 				
 				record = client.get(null, key, listBin);
 				printRecord(key, record);		
 					
 				// Pop value from end of list and also return new size of list.
-				record = client.operate(writePolicy, key, 
-						ListOperation.pop(listBin, -1),
-						ListOperation.size(listBin));
+				
+				// TODO pop the last element in the list, return it and the new size od the list
 
 				printRecord(key, record);	
 				
@@ -135,9 +134,11 @@ public class Program {
 				Statement stmt = new Statement();
 				stmt.setNamespace(ns);
 				stmt.setSetName(set);
-				stmt.setFilters(Filter.range(listBin, IndexCollectionType.LIST, 300, 350));
 				
-				RecordSet recordSet = client.query(null, stmt);
+				// TODO set a filter to perform a range query on the values in the list
+				// TODO Query using the statement
+				
+				RecordSet recordSet = null;
 				try {
 					System.out.println("\nRecords with values between 300 and 350:");
 					while (recordSet != null & recordSet.next()){
