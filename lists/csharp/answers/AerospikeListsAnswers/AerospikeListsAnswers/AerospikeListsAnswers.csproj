@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{0C682C76-42EF-46D2-9763-FF8BF9122FAA}</ProjectGuid>
+    <ProjectGuid>{A6A9969D-97D7-40A5-AA3F-AB14E096D78C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AerospikeLists</RootNamespace>
-    <AssemblyName>AerospikeLists</AssemblyName>
+    <RootNamespace>AerospikeListsAnswers</RootNamespace>
+    <AssemblyName>AerospikeListsAnswers</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -30,10 +30,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Neo.Lua">
+      <HintPath>..\packages\NeoLua.0.9.14\lib\net4\Neo.Lua.dll</HintPath>
+    </Reference>
+    <Reference Include="AerospikeClient">
+      <HintPath>..\packages\Aerospike.Client.3.2.4\lib\net40\AerospikeClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

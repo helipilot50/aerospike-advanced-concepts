@@ -147,6 +147,7 @@ public class Program {
 					if (recordSet != null) recordSet.close();
 				}
 				
+				client.close();
 			}
 		}	
 	}
