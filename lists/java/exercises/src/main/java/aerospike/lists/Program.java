@@ -64,14 +64,6 @@ public class Program {
 		set = "lists"; // Aerospike set name
 		String listBin = "list-of-things"; // Aerospike Bin name for a list
 		
-		// Connecting to Aerospike cluster
-		// Specify IP of one of the hosts in the cluster
-		String SeedHost = "127.0.0.1";
-		// Specify Port that the node is listening on
-		int SeedPort = 3000;
-		// Establish connection
-		client = new AerospikeClient(SeedHost, SeedPort);
-
 		WritePolicy writePolicy = new WritePolicy(); // Create a WritePolicy
 		writePolicy.sendKey = true; // Save the Key on each write
 		writePolicy.expiration = 300; // expire the records in 5 minutes

@@ -99,9 +99,9 @@ public class Program {
 				
 				Key key = new Key(ns, set, "a-record-with-a-map");
 
-				Bin map = new Bin(mapBin, aMapOfObjects); 
-				client.put(writePolicy, key, map);
-				Record record = client.get(null, key, mapBin);
+				// TODO save a map to Aerospike
+				Record record = null;
+				
 				
 				printRecord(key, record);
 
@@ -111,8 +111,7 @@ public class Program {
 						MapOrder.KEY_ORDERED, 
 						MapWriteMode.UPDATE_ONLY
 						);
-				
-				client.operate(writePolicy, key, MapOperation.put(mapPolicy, mapBin, Value.get("cat"), Value.get(7)));
+				// TODO an element to a map 'cat = 7'
 				
 				record = client.get(null, key, mapBin);
 				printRecord(key, record);
@@ -124,16 +123,14 @@ public class Program {
 					put(Value.get("mice"), Value.get("B"));
 				}};
 								
-				client.operate(writePolicy, key, 
-						MapOperation.putItems(mapPolicy, mapBin, anotherMap));
+				// TODO add a map of values to the stored map
 				
 				record = client.get(null, key, mapBin);
 				printRecord(key, record);		
 					
 				// Delete a key/value from the map and also return new size of map.
-				record = client.operate(writePolicy, key, 
-						MapOperation.removeByKey(mapBin, Value.get("dogs"), MapReturnType.KEY),
-						MapOperation.size(mapBin));
+				
+				// TODO delete the 'dogs' element
 
 				printRecord(key, record);	
 				
@@ -161,9 +158,11 @@ public class Program {
 				Statement stmt = new Statement();
 				stmt.setNamespace(ns);
 				stmt.setSetName(set);
-				stmt.setFilters(Filter.range(mapBin, IndexCollectionType.MAPVALUES, 300, 350));
 				
-				RecordSet recordSet = client.query(null, stmt);
+				// TODO set a filter to perform a range query on the map values in the map
+				// TODO Query using the statement
+				
+				RecordSet recordSet = null;
 				try {
 					System.out.println("\nRecords with map values between 300 and 350:");
 					while (recordSet != null & recordSet.next()){
@@ -173,15 +172,17 @@ public class Program {
 					if (recordSet != null) recordSet.close();
 				}
 				
-				// Query the records with map values between 300 and 350
+				// Query the records with map keys equal to 'dogs7'
 				
 				// Execute the Query
 				stmt = new Statement();
 				stmt.setNamespace(ns);
 				stmt.setSetName(set);
-				stmt.setFilters(Filter.contains(mapBin, IndexCollectionType.MAPKEYS, "dogs7"));
 				
-				recordSet = client.query(null, stmt);
+				// TODO set a filter to perform a range query on the map keys in the map
+				// TODO Query using the statement
+				
+				recordSet = null;
 				try {
 					System.out.println("\nRecords with map keys equal to dogs7:");
 					while (recordSet != null & recordSet.next()){

@@ -4,24 +4,39 @@ using Aerospike.Client;
 
 namespace AerospikeLists
 {
-	class Program
+	public class Program
 	{
+
+		private string ns = "test"; // Aerospike namespace
+		private string set = "lists"; // Aerospike set name
+		private string listBin = "list-of-things"; // Aerospike Bin name for a list
+		private AerospikeClient client;
+
 		public static void Main(string[] args)
 		{
+			try
+			{
+				Program prog = new Program();
+				prog.Work();
+
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Critical error: {0}", e.Message);
+			}
+		}
+
+		public Program()
+		{
+			// Establish a connection to Aerospike cluster
+			ClientPolicy cPolicy = new ClientPolicy();
+			cPolicy.timeout = 500;
+			client = new AerospikeClient(cPolicy, "127.0.0.1", 3000);
+
+		}
+
+		public void Work(){
 			Console.WriteLine("***** Lists in Aerospike *****");
-
-			// Constants
-			const string ns = "test"; // Aerospike namespace
-			const string set = "counters"; // Aerospike set name
-			const string listBin = "list-of-things"; // Aerospike Bin name for a list
-
-			// Connecting to Aerospike cluster
-			// Specify IP of one of the hosts in the cluster
-			string SeedHost = "127.0.0.1";
-			// Specity Port that the node is listening on
-			int SeedPort = 3000;
-			// Establish connection
-			AerospikeClient client = new AerospikeClient(SeedHost, SeedPort);
 
 			WritePolicy writePolicy = new WritePolicy(); // Create a WritePolicy
 			writePolicy.sendKey = true; // Save the Key on each write
@@ -72,7 +87,7 @@ namespace AerospikeLists
 				// Query the records with list values between 300 and 350
 
 				// Create index on list bin, if it does not exist
-				CreateIndex(client, ns, set, "listBinIndex", listBin, IndexType.NUMERIC);
+				CreateIndex("listBinIndex", listBin, IndexType.NUMERIC);
 
 				// Create many records with values in a list
 				Random rand = new Random(300);
@@ -113,7 +128,7 @@ namespace AerospikeLists
 			}
 		}
 
-		public static void CreateIndex(AerospikeClient client, String ns, String set, String indexName, String binName, IndexType indexType)
+		public void CreateIndex(String indexName, String binName, IndexType indexType)
 		{
 			// check to see if the index exists
 			Node node = client.Nodes[0];
@@ -128,7 +143,7 @@ namespace AerospikeLists
 			}
 		}
 
-		public static void PrintRecord(Key key, Record record)
+		public void PrintRecord(Key key, Record record)
 		{
 			Console.WriteLine("Key");
 			if (key == null)
