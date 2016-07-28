@@ -1,2 +1,0 @@
-imposm.parser
-aerospike>=1.0.56
