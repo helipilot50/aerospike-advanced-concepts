@@ -133,7 +133,9 @@ namespace AerospikeLists
 			// check to see if the index exists
 			Node node = client.Nodes[0];
 			String result = Info.Request(node, "sindex/" + ns);
-			bool indexExists = result.Contains(indexName) && result.Contains(binName);
+			bool indexExists = result.Contains(indexName) &&
+									 result.Contains(set) &&
+									 result.Contains(binName);
 
 			// create index
 			if (!indexExists)

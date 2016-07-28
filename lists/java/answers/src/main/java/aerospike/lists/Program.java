@@ -147,7 +147,9 @@ public class Program {
 		// check to see if the index exists
 		Node node = client.getNodes()[0];
 		String result = Info.request(node, "sindex/"+ns);
-		boolean indexExists = result.contains(indexName) && result.contains(binName);
+		boolean indexExists = result.contains(indexName) && 
+				result.contains(set) &&
+				result.contains(binName);
 		
 		// create index
 		if (!indexExists){

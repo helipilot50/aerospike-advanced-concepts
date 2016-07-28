@@ -32,8 +32,9 @@ import com.aerospike.client.task.IndexTask;
  */
 public class Program {
 	private AerospikeClient client;
-	private String ns; // Aerospike namespace
-	private String set; // Aerospike set name
+	private String ns = "test"; // Aerospike namespace
+	private String set = "maps"; // Aerospike set name
+	private String mapBin = "map-of-things"; // Aerospike Bin name for a map
 
 	public Program()
 			throws AerospikeException {
@@ -58,10 +59,6 @@ public class Program {
 
 	public void work() throws Exception {
 		System.out.println("***** Maps in Aerospike *****");
-		// Constants
-		ns = "test"; // Aerospike namespace
-		set = "maps"; // Aerospike set name
-		String mapBin = "map-of-things"; // Aerospike Bin name for a map
 				
 		WritePolicy writePolicy = new WritePolicy(); // Create a WritePolicy
 		writePolicy.sendKey = true; // Save the Key on each write
@@ -145,8 +142,8 @@ public class Program {
 					Key newKey = new Key(ns, set, "a-record-with-a-map-"+i);
 					Map<Value, Value> aMap = new HashMap<Value, Value>();
 					for ( int j = 0; j < 100; j++){
-						aMap.put(Value.get("dogs"+j), Value.get(i*j));
-						aMap.put(Value.get("mice"+j), Value.get(i+j));
+						aMap.put(Value.get("dogs"+j), Value.get(rand.nextInt(100) + 250));
+						aMap.put(Value.get("mice"+j), Value.get(rand.nextInt(100) + 250));
 					}
 					client.put(writePolicy, newKey, new Bin(mapBin, aMap));
 				}
@@ -173,7 +170,7 @@ public class Program {
 					if (recordSet != null) recordSet.close();
 				}
 				
-				// Query the records with map values between 300 and 350
+				// Query the records with map key equal to "dogs7"
 				
 				// Execute the Query
 				stmt = new Statement();
@@ -200,7 +197,9 @@ public class Program {
 		// check to see if the index exists
 		Node node = client.getNodes()[0];
 		String result = Info.request(node, "sindex/"+ns);
-		boolean indexExists = result.contains(indexName) && result.contains(binName);
+		boolean indexExists = result.contains(indexName) && 
+				result.contains(set) &&
+				result.contains(binName);
 		
 		// create index
 		if (!indexExists){
