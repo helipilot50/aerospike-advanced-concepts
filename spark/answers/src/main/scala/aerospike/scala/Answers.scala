@@ -16,7 +16,7 @@ object Answers extends App{
 	val sc = new SparkContext(new SparkConf().setAppName("AerospikeSpark").setMaster("local[*]"))
 	val sqlContext = new SQLContext(sc)
 
-	val rawFlightsRDD = sc.textFile("data/Flights 2016-01.csv")
+	val rawFlightsRDD = sc.textFile("../data/Flights 2016-01.csv")
 	val flightsRDD = rawFlightsRDD
 	      .filter(!_.contains("YEAR"))
 	      .map(_.replace("\"", ""))
@@ -36,7 +36,7 @@ object Answers extends App{
 						option("aerospike.namespace", "test").
 						option("aerospike.set", "spark-test").
 						option("aerospike.updateByKey", "key").
-						option("aerospike.expiryColumn", "expiry").
+						option("aerospike.ttlColumn", "expiry").
         save()                
 
 	
