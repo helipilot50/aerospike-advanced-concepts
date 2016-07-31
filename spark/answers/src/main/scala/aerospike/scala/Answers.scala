@@ -7,6 +7,9 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
+import org.apache.spark.sql.SaveMode
+
+import org.apache.spark.sql.functions._
 
 
 object Answers extends App{
@@ -19,9 +22,23 @@ object Answers extends App{
 	      .map(_.replace("\"", ""))
 	      .map(Flight.assign(_)).repartition(50)
 	val flightsDF = sqlContext.createDataFrame(flightsRDD)
+	
 	flightsDF.registerTempTable("flights")
 	flightsDF.printSchema()
-	flightsDF.show(10)
+	//flightsDF.show(50)
+	
+	
+	flightsDF.write.
+        mode(SaveMode.Overwrite).
+        format("com.aerospike.spark.sql").
+        option("aerospike.seedhost", "127.0.0.1").
+						option("aerospike.port", "3000").
+						option("aerospike.namespace", "test").
+						option("aerospike.set", "spark-test").
+						option("aerospike.updateByKey", "key").
+						option("aerospike.expiryColumn", "expiry").
+        save()                
+
 	
 }
 
@@ -37,22 +54,24 @@ case class Flight(
   CARRIER: String,
   TAIL_NUM: String,
   FL_NUM: String,
-  ORIGIN_AIRPORT_ID: Int,
-  ORIGIN_AIRPORT_SEQ_ID: Int,
+  ORIG_ID: Int,
+  ORIG_SEQ_ID: Int,
   ORIGIN: String,
-  DEST_AIRPORT_ID: Int,
+  DEST_AP_ID: Int,
   DEST: String,
   DEP_TIME: java.sql.Date,
   DEP_DELAY_NEW: Double,
   ARR_TIME: java.sql.Date,
   ARR_DELAY_NEW: Double,
-  ACTUAL_ELAPSED_TIME: Double,
-  DISTANCE: Double
+  ELAPSED_TIME: Double,
+  DISTANCE: Double,
+  key: String,
+  expiry: Int
 ) extends Serializable
 
 object Flight{
   val dtf = DateTimeFormat.forPattern("yyyy-MM-dd")
-  val tf = DateTimeFormat.forPattern("HHmm")
+  val tf = DateTimeFormat.forPattern("yyyy-MM-dd HHmm")
   
   def assign(csvRow: String): Flight = {
     
@@ -71,14 +90,21 @@ object Flight{
         values(10),
         values(11).toInt,
         values(12),
-        toTime(values(13)),
+        toTime(values(4), values(13)),
         toDouble(values(14)),
-        toTime(values(15)),
+        toTime(values(4), values(15)),
         toDouble(values(16)),
         toDouble(values(17)),
-        toDouble(values(18))
+        toDouble(values(18)),
+        formKey(values),
+        300
         )
     flight
+  }
+  
+  def formKey(values:Array[String]): String = {
+    val dep = if (values(13).isEmpty) "XXXX" else values(13)
+    values(5)+values(7)+":"+values(4)+":"+dep
   }
   
   def toDouble(doubleString: String): Double = {
@@ -89,11 +115,11 @@ object Flight{
     number
   }
   
-  def toTime(timeString: String): java.sql.Date = {
+  def toTime(dateString:String, timeString: String): java.sql.Date = {
     val time = timeString match {
       case "" => null
-      case "2400" => new java.sql.Date(tf.parseDateTime("0000").getMillis)
-      case _ => new java.sql.Date(tf.parseDateTime(timeString).getMillis)
+      case "2400" => new java.sql.Date(tf.parseDateTime(dateString + " 0000").getMillis)
+      case _ => new java.sql.Date(tf.parseDateTime(dateString + " " + timeString).getMillis)
     }
     time
   }
