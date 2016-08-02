@@ -6,7 +6,7 @@ version := "1.0.0"
 
 organization := "com.aerospike"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.10.6"
 
 javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 
@@ -14,7 +14,6 @@ parallelExecution in test := false
 
 libraryDependencies ++= Seq("org.apache.spark" %% "spark-core" % "1.6.2" % "provided",
 	"org.apache.spark" %% "spark-sql" % "1.6.2" % "provided",
-	"com.aerospike" % "aerospike-helper-java" % "1.0.5",
 	"org.scalatest" %% "scalatest" % "2.2.1" % "test")
 
 resolvers ++= Seq("Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository")
