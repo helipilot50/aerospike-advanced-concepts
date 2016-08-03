@@ -2,10 +2,11 @@
 
 TOTAL_NODES=3
 
-while getopts t: option
+while getopts p:t: option
 do
 	case "${option}"
 	in
+		p) IP_PREFIX=${OPTARG};;
 		t) TOTAL_NODES=${OPTARG};;
 	esac
 done
@@ -14,7 +15,7 @@ function setupHosts {
 	echo "modifying /etc/hosts file"
 	for i in $(seq 1 $TOTAL_NODES)
 	do 
-		entry="10.211.55.10${i} node${i}"
+		entry="${IP_PREFIX}${i} node${i}"
 		echo "adding ${entry}"
 		echo "${entry}" >> /etc/nhosts
 	done

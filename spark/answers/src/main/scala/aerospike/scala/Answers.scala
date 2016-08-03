@@ -72,9 +72,11 @@ object Answers extends App{
   	load 
 	flightsDF.registerTempTable("Flights")
 	
-	val lateFlightsDF = sqlContext.sql("select CARRIER, FL_NUM, DEP_DELAY_NEW, ARR_DELAY_NEW from Flights")  
+	flightsDF.show(5)
 	
-	println("Flights %d".format(lateFlightsDF.count))
+	//val lateFlightsDF = sqlContext.sql("select CARRIER, FL_NUM, DEP_DELAY_NEW, ARR_DELAY_NEW from Flights")  
+	
+	//println("Flights %d".format(lateFlightsDF.count))
 }
 
 /**
