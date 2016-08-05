@@ -113,7 +113,7 @@ public class Program {
 					-33.86785d // Latitude
 					);
 			
-			// TODO create a filter to discover which regions a point is in 
+			// TODO create a filter to discover the regions containing this point 
 			
 			System.out.println("Regions:");
 			queryStatement(stmt);

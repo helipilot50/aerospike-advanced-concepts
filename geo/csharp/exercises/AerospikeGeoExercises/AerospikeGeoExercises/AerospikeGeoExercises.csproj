@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{B5635EB6-F01F-4DD9-B979-20E16D75973B}</ProjectGuid>
+    <ProjectGuid>{3DA3BAC0-77A5-4E17-94D2-BDB54D896E81}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AerospikeGeoAnswers</RootNamespace>
-    <AssemblyName>AerospikeGeoAnswers</AssemblyName>
+    <RootNamespace>AerospikeGeoExercises</RootNamespace>
+    <AssemblyName>AerospikeGeoExercises</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -30,21 +30,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Neo.Lua">
+      <HintPath>..\packages\NeoLua.0.9.14\lib\net4\Neo.Lua.dll</HintPath>
+    </Reference>
     <Reference Include="AerospikeClient">
       <HintPath>..\packages\Aerospike.Client.3.2.4\lib\net40\AerospikeClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <Reference Include="Neo.Lua">
-      <HintPath>..\packages\NeoLua.1.2.6\lib\net45\Neo.Lua.dll</HintPath>
-    </Reference>
-    <Reference Include="Neo.Lua.Desktop">
-      <HintPath>..\packages\NeoLua.1.2.6\lib\net45\Neo.Lua.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Dynamic" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>

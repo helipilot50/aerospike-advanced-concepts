@@ -5,7 +5,6 @@ using Aerospike.Client;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
 
-
 namespace AerospikeGeoAnswers
 {
 	class Program
@@ -68,11 +67,7 @@ namespace AerospikeGeoAnswers
 
 				// Find all airports within 150km of Sydney Latitude: -33.86785, Longitude: 151.20732
 
-				stmt.SetFilters(Filter.GeoWithinRadius(locationBin,
-						151.20732d, // Longitude
-						-33.86785d, // Latitude
-						150000 // radius in meters
-						));
+				// TODO create a Radius filter using Sydney's location with a radius of 150km
 
 				Console.WriteLine("Airports:");
 				QueryStatement(stmt);
@@ -85,7 +80,8 @@ namespace AerospikeGeoAnswers
 						151.20732d, // Longitude
 						-33.86785d // Latitude
 						);
-				stmt.SetFilters(Filter.GeoContains(regionBin, point));
+				
+				// TODO create a filter to discover the regions containing this point 
 
 				Console.WriteLine("Regions:");
 				QueryStatement(stmt);
@@ -200,7 +196,7 @@ namespace AerospikeGeoAnswers
 							new Bin("type", type),
 							new Bin(regionBin, Value.GetAsGeoJSON(region))
 							);
-						
+
 					count++;
 				}
 				Console.WriteLine("Loaded: " + count + " countries");
