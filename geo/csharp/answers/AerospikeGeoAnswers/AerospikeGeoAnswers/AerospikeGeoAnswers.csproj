@@ -30,17 +30,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Neo.Lua">
-      <HintPath>..\packages\NeoLua.0.9.14\lib\net4\Neo.Lua.dll</HintPath>
-    </Reference>
     <Reference Include="AerospikeClient">
       <HintPath>..\packages\Aerospike.Client.3.2.4\lib\net40\AerospikeClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\packages\ServiceStack.Text.4.0.60\lib\net40\ServiceStack.Text.dll</HintPath>
+    <Reference Include="Neo.Lua">
+      <HintPath>..\packages\NeoLua.1.2.6\lib\net45\Neo.Lua.dll</HintPath>
     </Reference>
+    <Reference Include="Neo.Lua.Desktop">
+      <HintPath>..\packages\NeoLua.1.2.6\lib\net45\Neo.Lua.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Dynamic">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

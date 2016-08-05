@@ -63,7 +63,7 @@ public class Program {
 
 		writePolicy = new WritePolicy(); // Create a WritePolicy
 		writePolicy.sendKey = true; // Save the Key on each write
-		writePolicy.expiration = 300; // expire the records in 5 minutes
+		writePolicy.expiration = 600; // expire the records in 10 minutes
 
 		parser = new JSONParser();
 	}
@@ -95,6 +95,7 @@ public class Program {
 			Statement stmt = new Statement();
 			stmt.setNamespace(ns);
 			stmt.setSetName(airportSet);
+			stmt.setBinNames("ICAO", "IATA", "name", "city", "country");
 
 			// Find all airports within 150km of Sydney Latitude: -33.86785, Longitude: 151.20732
 
@@ -107,7 +108,10 @@ public class Program {
 			System.out.println("Airports:");
 			queryStatement(stmt);
 
+			// Find all regions that contain this point
 			stmt.setSetName(regionSet);
+			stmt.setBinNames("name", "type");
+			
 			String point = String.format("{ \"type\": \"Point\", \"coordinates\": [%f, %f] }", 
 					151.20732d, // Longitude
 					-33.86785d // Latitude

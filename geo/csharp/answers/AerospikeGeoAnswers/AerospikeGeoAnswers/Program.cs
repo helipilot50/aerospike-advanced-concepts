@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Aerospike.Client;
+using Microsoft.VisualBasic.FileIO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Linq.Dynamic;
 
 namespace AerospikeGeoAnswers
 {
 	class Program
 	{
-		private String ns = "test"; // Aerospike namespace
-		private String set = "geo"; // Aerospike set name
-		private String geoBin = "geo-location"; // Aerospike Bin name for geo location
-		private WritePolicy writePolicy = null;
 		private AerospikeClient client;
+		private String ns = "test"; // Aerospike namespace
+		private String airportSet = "airport"; // Aerospike airport set name
+		private String regionSet = "region"; // Aerospike region set name
+		private String nameIndexSet = "name-index"; // Aerospike name index set name
+		private String locationBin = "geo-location"; // Aerospike Bin name for geo location
+		private String regionBin = "geo-region"; // Aerospike Bin name for geo region
+		private WritePolicy writePolicy = null;
+
 
 		public static void Main(string[] args)
 		{
@@ -31,11 +40,13 @@ namespace AerospikeGeoAnswers
 			// Establish a connection to Aerospike cluster
 			ClientPolicy cPolicy = new ClientPolicy();
 			cPolicy.timeout = 500;
-			client = new AerospikeClient(cPolicy, "127.0.0.1", 3000);
+			this.client = new AerospikeClient(cPolicy, "127.0.0.1", 3000);
 
 			writePolicy = new WritePolicy(); // Create a WritePolicy
 			writePolicy.sendKey = true; // Save the Key on each write
-			writePolicy.expiration = 300; // expire the records in 5 minutes
+			writePolicy.expiration = 600; // expire the records in 10 minutes
+
+
 
 		}
 		public void Work()
@@ -45,140 +56,238 @@ namespace AerospikeGeoAnswers
 			if (client.Connected)
 			{
 				// create an index on geoBin 
-				createIndex("jobLocation", geoBin, IndexType.GEO2DSPHERE);
+				CreateIndex(airportSet, "geoLocation", locationBin, IndexType.GEO2DSPHERE);
+				CreateIndex(regionSet, "geoRegion", regionBin, IndexType.GEO2DSPHERE);
 
 				// load geo data
-				loadData();
+				LoadData();
 
 				Statement stmt = new Statement();
-				stmt.setNamespace(ns);
-				stmt.setSetName(set);
+				stmt.Namespace = ns;
+				stmt.SetName = airportSet;
+				stmt.BinNames = new string[] { "ICAO", "IATA", "name", "city", "country" };
 
 				// Find all airports within 150km of Sydney Latitude: -33.86785, Longitude: 151.20732
 
-				stmt.setFilters(Filter.geoWithinRadius(geoBin,
+				stmt.SetFilters(Filter.GeoWithinRadius(locationBin,
 						151.20732d, // Longitude
 						-33.86785d, // Latitude
 						150000 // radius in meters
 						));
 
-				queryStatement(stmt);
+				Console.WriteLine("Airports:");
+				QueryStatement(stmt);
 
-				String point = String.format("{ \"type\": \"Point\", \"coordinates\": [%f, %f] }",
+				// Find all regions that contain this point
+				stmt.SetName = regionSet;
+				stmt.BinNames = new string[] { "name", "type" };
+
+				String point = String.Format("{{ \"type\": \"Point\", \"coordinates\": [{0}, {1}] }}",
 						151.20732d, // Longitude
 						-33.86785d // Latitude
 						);
-				stmt.setFilters(Filter.geoContains(geoBin, point));
+				stmt.SetFilters(Filter.GeoContains(regionBin, point));
 
-				queryStatement(stmt);
+				Console.WriteLine("Regions:");
+				QueryStatement(stmt);
 
-				// close Aerospike at the end of your program
-				client.Close();
+
 			}
+
+			client.Close();
 		}
 
-		private void queryStatement(Statement stmt)
+		private void QueryStatement(Statement stmt)
 		{
-			List<Record> airports = new ArrayList<Record>();
+			List<Record> records = new List<Record>();
 
-			long start = System.currentTimeMillis();
+			long start = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 			long stop = 0;
 			int count = 0;
-			RecordSet recordSet = client.query(null, stmt);
+			RecordSet recordSet = client.Query(null, stmt);
 			try
 			{
-				while (recordSet != null && recordSet.next())
+				while (recordSet != null & recordSet.Next())
+
 				{
-					airports.add(recordSet.getRecord());
+					records.Add(recordSet.Record);
 					count++;
 				}
 			}
 			finally
 			{
-				stop = System.currentTimeMillis();
-				recordSet.close();
+				stop = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+				if (recordSet != null) recordSet.Close();
 			}
-			for (Record airport : airports)
+			foreach (Record record in records)
+				PrintRecord(record);
+
+			Console.WriteLine("Found {0} records in {1} ms", count, (stop - start));
+
+		}
+
+		private void LoadData()
+		{
+			int count = 0;
+
+			//only load airports if they do not exist
+			if (!client.Exists(null, new Key(ns, airportSet, "SYD:YSSY")))
 			{
-				printAirport(airport);
+				String airportPath = "../../../../../../data/airports.csv";
+				using (TextFieldParser csvParser = new TextFieldParser(airportPath))
+				{
+					csvParser.TextFieldType = Microsoft.VisualBasic.FileIO.FieldType.Delimited;
+					csvParser.SetDelimiters(",");
+					while (!csvParser.EndOfData)
+					{
+						//Process row
+						string[] fields = csvParser.ReadFields();
+						long id = Int64.Parse(fields[0]);
+						String name = fields[1];
+						String city = fields[2];
+						String country = fields[3];
+						String IATA = fields[4];
+						String ICAO = fields[5];
+						Double lat = Double.Parse(fields[6]);
+						Double lon = Double.Parse(fields[7]);
+						long elevation = Int64.Parse(fields[8]);
+						String region = fields[11];
+
+						Key key = new Key(ns, airportSet, IATA + ":" + ICAO);
+
+						client.Put(writePolicy, key,
+								new Bin("id", id),
+								new Bin("name", name),
+								new Bin("city", city),
+								new Bin("country", country),
+								new Bin("IATA", IATA),
+								new Bin("ICAO", ICAO),
+								new Bin(locationBin, Value.GetAsGeoJSON(CreatePoint(lon, lat))),
+								new Bin("elevation", elevation),
+								new Bin("region", region)
+								);
+						count++;
+
+					}
+					Console.WriteLine("Loaded: " + count + " airports");
+				}
 			}
-			System.out.println(String.format("Found %d airports in %d ms", count, (stop - start)));
+
+			//only load countries if they do not exist
+
+			if (!client.Exists(null, new Key(ns, regionSet, "ZWE")))
+			{
+
+				String regionPath = "../../../../../../data/countries";
+				count = 0;
+
+				foreach (string file in Directory.EnumerateFiles(regionPath, "*.json"))
+				{
+
+					string contents = File.ReadAllText(file);
+					dynamic jsonCountry = JValue.Parse(contents);
+
+					String id = jsonCountry.features[0].id;
+					String type = "country";
+					String name = jsonCountry.features[0].properties.name;
+					String region = jsonCountry.features[0].geometry.ToString();
+
+					Key key = new Key(ns, regionSet, id);
+
+					client.Put(writePolicy, key,
+							new Bin("id", id),
+							new Bin("name", name),
+							new Bin("type", type),
+							new Bin(regionBin, Value.GetAsGeoJSON(region))
+							);
+						
+					count++;
+				}
+				Console.WriteLine("Loaded: " + count + " countries");
+			}
+
+			//only load cities if they do not exist
+
+			if (!client.Exists(null, new Key(ns, regionSet, "TORSHAVN:1")))
+			{
+
+				String cityPath = "../../../../../../data/cities.geo.json";
+				string contents = File.ReadAllText(cityPath);
+				dynamic jsonCity = JValue.Parse(contents);
+
+				foreach (dynamic city in jsonCity.features)
+				{
+					String name = city.properties.NAME;
+					String region = city.geometry.ToString();
+
+					Key indexKey = new Key(ns, nameIndexSet, name);
+
+					Record record = client.Operate(writePolicy, indexKey,
+						Operation.Add(new Bin("index-counter", 1)),
+						Operation.Get("index-counter"));
+
+					String id = name + ":" + record.GetInt("index-counter");
+
+					Key recordKey = new Key(ns, regionSet, id);
+
+					client.Put(writePolicy, recordKey,
+							new Bin("id", id),
+							new Bin("name", name),
+							new Bin("type", "city"),
+							new Bin(regionBin, Value.GetAsGeoJSON(region))
+							);
+
+					client.Operate(writePolicy, indexKey, MapOperation.Put(
+							new MapPolicy(MapOrder.KEY_ORDERED, MapWriteMode.UPDATE),
+							"index-bin",
+							Value.Get(id),
+							Value.Get(recordKey.digest)));
+					count++;
+				}
+				Console.WriteLine("Loaded: " + count + " cities");
+			}
+
 
 		}
 
-		private void loadData() throws IOException
+
+		private String CreatePoint(double lon, double lat)
 		{
-		//only load the data if it does not exist
-		if (client.exists(null, new Key(ns, set, "SYD:YSSY"))) return;
-
-		String airportPath = "../../data/airports.csv";
-		Reader in = new FileReader(airportPath);
-		Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
-		int count = 0;
-		for (CSVRecord record : records) {
-
-			Long id = Long.parseLong(record.get(0));
-		String name = record.get(1);
-		String city = record.get(2);
-		String country = record.get(3);
-		String IATA = record.get(4);
-		String ICAO = record.get(5);
-		Double lat = Double.parseDouble(record.get(6));
-		Double lon = Double.parseDouble(record.get(7));
-		Long elevation = Long.parseLong(record.get(8));
-		String region = record.get(11);
-
-		Location location = new Location(lon, lat);
-
-		Key key = new Key(ns, set, IATA + ":" + ICAO);
-
-		client.Put(writePolicy, key,
-					new Bin("id", id),
-					new Bin("name", name),
-					new Bin("city", city),
-					new Bin("country", country),
-					new Bin("IATA", IATA),
-					new Bin("ICAO", ICAO),
-					new Bin(geoBin, Value.getAsGeoJSON(location.toGeoJSONPointDouble())),
-					new Bin("elevation", elevation),
-					new Bin("region", region)
-					);
-			count++;
+			return String.Format("{{ \"type\": \"Point\", \"coordinates\": [{0}, {1}] }}", lon, lat);
 		}
-	System.out.println("Loaded: " + count + " airports");
-}
 
-private void createIndex(String indexName, String binName, IndexType indexType)
-{
-	// check to see if the index exists
-	Node node = client.getNodes()[0];
-	String result = Info.request(node, "sindex/" + ns);
-	boolean indexExists = result.contains(indexName) &&
-			result.contains(set) &&
-			result.contains(binName);
-
-	// create index
-	if (!indexExists)
-	{
-		IndexTask task = client.createIndex(null, ns, set, indexName, binName, indexType);
-		task.waitTillComplete();
-	}
-}
-
-private void printAirport(Record record)
-{
-	if (record == null)
-	{
-		System.out.println("\trecord == null");
-	}
-	else
-	{
-		System.out.println(String.format("Airport: %s %s", record.getString("IATA"), record.getString("ICAO")));
-		for (Map.Entry<String, Object> entry : record.bins.entrySet())
+		private void CreateIndex(String set, String indexName, String binName, IndexType indexType)
 		{
-			System.out.println(String.format("\t%s = %s", entry.getKey(), entry.getValue().toString()));
+			// check to see if the index exists
+			Node node = client.Nodes[0];
+			String result = Info.Request(node, "sindex/" + ns);
+			bool indexExists = result.Contains(indexName) &&
+					result.Contains(set) &&
+					result.Contains(binName);
+
+			// create index
+			if (!indexExists)
+			{
+				IndexTask task = client.CreateIndex(null, ns, set, indexName, binName, indexType);
+				task.Wait();
+			}
 		}
-	}
-}
+
+		private void PrintRecord(Record record)
+		{
+			if (record == null)
+			{
+				Console.WriteLine("\trecord == null");
+			}
+			else
+			{
+				foreach (KeyValuePair<string, Object> entry in record.bins)
+				{
+					Console.WriteLine(String.Format("\t{0} = {1}", entry.Key, entry.Value));
+				}
+				Console.WriteLine();
+			}
+		}
 	}
 }
