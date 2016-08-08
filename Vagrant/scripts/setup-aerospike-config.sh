@@ -18,7 +18,7 @@ function setupAerospike {
 	rm /etc/aerospike/aerospike.conf
 	cat /vagrant/scripts/aerospike-1.conf >> /etc/aerospike/aerospike.conf
 
-	echo "		access-address ${IP_PREFIX}${NODE}" >> /etc/aerospike/aerospike.conf
+	echo "		access-address ${IP_PREFIX}${NODE} virtual" >> /etc/aerospike/aerospike.conf
 	echo "		network-interface-name eth2" >> /etc/aerospike/aerospike.conf
 	echo "		}" >> /etc/aerospike/aerospike.conf
 	echo "	heartbeat {" >> /etc/aerospike/aerospike.conf
