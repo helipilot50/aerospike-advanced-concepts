@@ -82,7 +82,7 @@ public class Program {
 						put("nkunftszeit_Rueck", 0);
 						put("lugnummer_Hin", 385);
 						put("aehrung", "UR");
-						put("reis", 861.0f);
+						put("preis", 861.0f);
 						put("nfant_Preis", 126);
 						put("lter_von_1", 2);
 						put("lter_bis_1", 11);

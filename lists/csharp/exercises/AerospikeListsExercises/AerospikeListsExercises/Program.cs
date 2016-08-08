@@ -73,14 +73,14 @@ namespace AerospikeLists
 					Value.Get(77)
 				};
 
-				// TODO append inputList to the list already saved
+				// TODO append the inputList to the list
 
 				record = client.Get(null, key, listBin);
 				PrintRecord(key, record);
 
 				// Pop value from end of list and also return new size of list.
 
-				// TODO pop the last element in the list, return it and the new size od the list
+				// TODO pop the last element in the list, return it and the new size of the list
 
 				PrintRecord(key, record);
 
@@ -108,7 +108,7 @@ namespace AerospikeLists
 				stmt.Namespace = ns;
 				stmt.SetName = set;
 
-				// TODO set a filter to perform a range query on the values in the list
+				// TODO set a filter to perform a range query on the values between 300 and 350
 				// TODO Query using the statement
 
 				RecordSet recordSet = null;

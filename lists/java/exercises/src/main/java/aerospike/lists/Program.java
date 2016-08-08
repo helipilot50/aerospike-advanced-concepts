@@ -94,14 +94,14 @@ public class Program {
 				inputList.add(Value.get(55));
 				inputList.add(Value.get(77));
 				
-				// TODO append inputList to the list already saved
+				// TODO append the inputList to the list
 				
 				record = client.get(null, key, listBin);
 				printRecord(key, record);		
 					
 				// Pop value from end of list and also return new size of list.
 				
-				// TODO pop the last element in the list, return it and the new size od the list
+				// TODO pop the last element off the list, return it and the new size of the list
 
 				printRecord(key, record);	
 				
@@ -127,7 +127,7 @@ public class Program {
 				stmt.setNamespace(ns);
 				stmt.setSetName(set);
 				
-				// TODO set a filter to perform a range query on the values in the list
+				// TODO set a filter to perform a range query on the values between 300 and 350
 				// TODO Query using the statement
 				
 				RecordSet recordSet = null;
