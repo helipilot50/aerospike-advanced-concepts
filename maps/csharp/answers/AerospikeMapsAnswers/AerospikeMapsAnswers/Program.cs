@@ -58,7 +58,7 @@ namespace AerospikeMapsAnswers
 					{"nkunftszeit_Rueck", 0},
 					{"lugnummer_Hin", 385},
 					{"aehrung", "UR"},
-					{"reis", 861.0f},
+					{"preis", 861.0f},
 					{"nfant_Preis", 126},
 					{"lter_von_1", 2},
 					{"lter_bis_1", 11},
@@ -80,13 +80,13 @@ namespace AerospikeMapsAnswers
 
 			PrintRecord(key, record);
 
-			// Add 1 element to the map and print the result
-
+			
 			MapPolicy mapPolicy = new MapPolicy(
 					MapOrder.KEY_ORDERED,
 					MapWriteMode.UPDATE_ONLY
 					);
 
+			// Add 1 element to the map and print the result
 			client.Operate(writePolicy, key, MapOperation.Put(mapPolicy, mapBin, Value.Get("cat"), Value.Get(7)));
 					
 			record = client.Get(null, key, mapBin);

@@ -58,7 +58,7 @@ namespace AerospikeMapsAnswers
 					{"nkunftszeit_Rueck", 0},
 					{"lugnummer_Hin", 385},
 					{"aehrung", "UR"},
-					{"reis", 861.0f},
+					{"preis", 861.0f},
 					{"nfant_Preis", 126},
 					{"lter_von_1", 2},
 					{"lter_bis_1", 11},
