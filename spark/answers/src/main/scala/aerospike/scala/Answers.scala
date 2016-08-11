@@ -13,6 +13,10 @@ import org.apache.spark.sql.functions._
 
 
 object Answers extends App{
+  
+  val seedHost = "52.17.174.156"     // "127.0.0.1"
+  val namespace = "mem"              // "test"
+  
 	val sc = new SparkContext(new SparkConf().setAppName("AerospikeSpark").setMaster("local[*]"))
 	val sqlContext = new SQLContext(sc)
 
@@ -47,17 +51,18 @@ object Answers extends App{
 		 * ttl column: expiry - expire in 300 seconds
 		 */
 
-	println("Save flights to Aerospike")
-	flightsDF.write.
-		mode(SaveMode.Overwrite).
-		format("com.aerospike.spark.sql").
-		option("aerospike.seedhost", "127.0.0.1").
-		option("aerospike.port", "3000").
-		option("aerospike.namespace", "test").
-		option("aerospike.set", "spark-test").
-		option("aerospike.updateByKey", "key").
-		option("aerospike.ttlColumn", "expiry").
-		save()                
+//	println("Save flights to Aerospike")
+//	flightsDF.write.
+//		mode(SaveMode.Overwrite).
+//		format("com.aerospike.spark.sql").
+//		option("aerospike.seedhost", seedHost).
+//		option("aerospike.port", "3000").
+//		option("aerospike.namespace", namespace).
+//		option("aerospike.set", "spark-test").
+//		option("aerospike.updateByKey", "key").
+//		option("aerospike.ttlColumn", "expiry").
+//		option("aerospike.timeout", "500").
+//		save()                
 	
 	/*
 	 * find all the flights that are late
@@ -65,10 +70,11 @@ object Answers extends App{
 	println("Find late flights from Aerospike")
 	flightsDF = sqlContext.read.
   	format("com.aerospike.spark.sql").
-  	option("aerospike.seedhost", "127.0.0.1").
+  	option("aerospike.seedhost", seedHost).
   	option("aerospike.port", "3000").
-  	option("aerospike.namespace", "test").
+  	option("aerospike.namespace", namespace).
   	option("aerospike.set", "spark-test").
+  	option("aerospike.timeout", "500").
   	load 
 	flightsDF.registerTempTable("Flights")
 	
@@ -134,7 +140,7 @@ object Flight{
 									toDouble(values(17)),
 									toDouble(values(18)),
 									formKey(values),
-									300
+									-1//300
 									)
 							flight
 	}
