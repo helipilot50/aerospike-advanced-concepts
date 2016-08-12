@@ -18,7 +18,7 @@ namespace AerospikeCounters
 
 			// Connecting to Aerospike cluster
 			// Specify IP of one of the hosts in the cluster
-			string SeedHost = "127.0.0.1";
+			string SeedHost = "10.211.55.101";
 			// Specity Port that the node is listening on
 			int SeedPort = 3000;
 			// Establish connection

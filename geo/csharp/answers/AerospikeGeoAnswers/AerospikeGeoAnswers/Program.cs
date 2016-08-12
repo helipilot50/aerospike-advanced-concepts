@@ -39,7 +39,7 @@ namespace AerospikeGeoAnswers
 			// Establish a connection to Aerospike cluster
 			ClientPolicy cPolicy = new ClientPolicy();
 			cPolicy.timeout = 500;
-			this.client = new AerospikeClient(cPolicy, "127.0.0.1", 3000);
+			this.client = new AerospikeClient(cPolicy, "10.211.55.101", 3000);
 
 			writePolicy = new WritePolicy(); // Create a WritePolicy
 			writePolicy.sendKey = true; // Save the Key on each write

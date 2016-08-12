@@ -31,7 +31,7 @@ namespace AerospikeLists
 			// Establish a connection to Aerospike cluster
 			ClientPolicy cPolicy = new ClientPolicy();
 			cPolicy.timeout = 500;
-			client = new AerospikeClient(cPolicy, "127.0.0.1", 3000);
+			client = new AerospikeClient(cPolicy, "10.211.55.101", 3000);
 
 		}
 
