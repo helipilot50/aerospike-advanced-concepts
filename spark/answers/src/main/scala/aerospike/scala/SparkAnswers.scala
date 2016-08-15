@@ -78,9 +78,10 @@ object Answers extends App{
   	load 
 	flightsDF.registerTempTable("Flights")
 	
-	//flightsDF.show(5)
+	flightsDF.show(5)
 	
-	val lateFlightsDF = sqlContext.sql("select CARRIER, FL_NUM, DEP_DELAY_NEW, ARR_DELAY_NEW from Flights where ARR_DELAY_NEW > 5")  
+	val lateFlightsDF = sqlContext.sql("""select CARRIER, FL_NUM, DEP_DELAY_NEW, ARR_DELAY_NEW 
+  from Flights where ARR_DELAY_NEW > 5""")  
 	
 	val count = lateFlightsDF.count()
 	println(s"Count of late flights: $count")
