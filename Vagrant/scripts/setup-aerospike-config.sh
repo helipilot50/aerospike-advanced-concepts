@@ -18,6 +18,24 @@ function setupAerospike {
 	rm /etc/aerospike/aerospike.conf
 	cat /vagrant/scripts/aerospike-1.conf >> /etc/aerospike/aerospike.conf
 
+	echo " logging {" >> /etc/aerospike/aerospike.conf
+	echo "    file /vagrant/logs/aerospike${NODE}.log {" >> /etc/aerospike/aerospike.conf
+	echo "        context any info" >> /etc/aerospike/aerospike.conf 
+	echo "    }" >> /etc/aerospike/aerospike.conf
+	echo "    file /vagrant/logs/udf${NODE}.log {" >> /etc/aerospike/aerospike.conf
+	echo "         context any critical" >> /etc/aerospike/aerospike.conf
+	echo "         context udf info" >> /etc/aerospike/aerospike.conf
+	echo "    }" >> /etc/aerospike/aerospike.conf
+	echo "    file /vagrant/logs/agg${NODE}.log {" >> /etc/aerospike/aerospike.conf
+	echo "         context any critical" >> /etc/aerospike/aerospike.conf
+	echo "         context aggr debug" >> /etc/aerospike/aerospike.conf
+	echo "    }" >> /etc/aerospike/aerospike.conf
+	echo "}" >> /etc/aerospike/aerospike.conf
+
+	echo "network {" >> /etc/aerospike/aerospike.conf
+	echo "	service {" >> /etc/aerospike/aerospike.conf
+	echo "		address any" >> /etc/aerospike/aerospike.conf
+	echo "		port 3000" >> /etc/aerospike/aerospike.conf
 	echo "		access-address ${IP_PREFIX}${NODE} virtual" >> /etc/aerospike/aerospike.conf
 	echo "		network-interface-name eth2" >> /etc/aerospike/aerospike.conf
 	echo "		}" >> /etc/aerospike/aerospike.conf

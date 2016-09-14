@@ -83,7 +83,7 @@ namespace AerospikeMapsAnswers
 			
 			MapPolicy mapPolicy = new MapPolicy(
 					MapOrder.KEY_ORDERED,
-					MapWriteMode.UPDATE_ONLY
+					MapWriteMode.UPDATE
 					);
 
 			// Add 1 element to the map and print the result

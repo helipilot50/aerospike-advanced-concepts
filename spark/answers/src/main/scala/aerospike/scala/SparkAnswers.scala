@@ -86,7 +86,7 @@ object Answers extends App{
 	val count = lateFlightsDF.count()
 	println(s"Count of late flights: $count")
 	
-	lateFlightsDF.show(10)
+	//lateFlightsDF.show(10)
 }
 
 /**

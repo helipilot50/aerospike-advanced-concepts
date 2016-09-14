@@ -12,8 +12,8 @@ javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 
 parallelExecution in test := false
 
-libraryDependencies ++= Seq("org.apache.spark" %% "spark-core" % "1.6.2" % "provided",
-	"org.apache.spark" %% "spark-sql" % "1.6.2" % "provided",
+libraryDependencies ++= Seq("org.apache.spark" %% "spark-core" % "1.6.2",
+	"org.apache.spark" %% "spark-sql" % "1.6.2" ,
 	"joda-time" % "joda-time" % "2.9.4",
 	"org.scalatest" %% "scalatest" % "2.2.1" % "test")
 
