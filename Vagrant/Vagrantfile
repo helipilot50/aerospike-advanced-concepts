@@ -7,6 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   r = numNodes..1
   (r.first).downto(r.last).each do |i|
     config.vm.define "node#{i}" do |node|
+    config.ssh.insert_key = false
       node.vm.box = "centos65"
       node.vm.box = "aerospike/centos-6.5"
       node.vm.provider "virtualbox" do |v|
